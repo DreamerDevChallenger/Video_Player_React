@@ -1,41 +1,38 @@
 import { IconButton, Tooltip } from "@mui/material";
 import { StyledVideoControlBox, StyledVideoController } from "./style";
 import { ICON_DATA } from "../IconButtons";
-import { useCallback, useEffect, useState } from "react";
 
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
-const VideoControl = ({ videoRef }) => {
-  const [togglePlay, setTogglePlay] = useState(true);
+const VideoControl = ({ videoRef, controlState, setControlState }) => {
+  const { isPlaying, sound, speed } = controlState;
 
   const playVideo = () => {
+    setControlState({ ...controlState, isPlaying: true });
     videoRef.current.play();
-    setTogglePlay(false);
   };
 
   const pauseVideo = () => {
+    setControlState({ ...controlState, isPlaying: false });
     videoRef.current.pause();
-    setTogglePlay(true);
   };
 
-  const handleKeyCode = useCallback((e) => {
+  const handleKeyEvent = (e) => {
     const { keyCode } = e;
-
     if (keyCode === 75 || keyCode === 32) {
-      if (togglePlay) {
-        return playVideo();
-      } else {
+      if (isPlaying) {
         return pauseVideo();
+      } else {
+        return playVideo();
       }
     }
-  });
+  };
 
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyCode);
-    return () => window.removeEventListener("keydown", handleKeyCode);
-  }, [handleKeyCode]);
-
-  useEffect(() => {});
+    window.addEventListener("keydown", handleKeyEvent);
+    return () => window.removeEventListener("keydown", handleKeyEvent);
+  }, [handleKeyEvent]);
 
   return (
     <StyledVideoController className="video-controls">
@@ -48,16 +45,16 @@ const VideoControl = ({ videoRef }) => {
           </Tooltip>
         </div>
         <div>
-          {togglePlay ? (
-            <Tooltip title={ICON_DATA.play.tooltip} placement="top">
-              <IconButton onClick={() => playVideo()}>
-                {ICON_DATA.play.icon}
-              </IconButton>
-            </Tooltip>
-          ) : (
+          {isPlaying ? (
             <Tooltip title={ICON_DATA.pause.tooltip} placement="top">
               <IconButton onClick={() => pauseVideo()}>
                 {ICON_DATA.pause.icon}
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <Tooltip title={ICON_DATA.play.tooltip} placement="top">
+              <IconButton onClick={() => playVideo()}>
+                {ICON_DATA.play.icon}
               </IconButton>
             </Tooltip>
           )}

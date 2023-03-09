@@ -1,11 +1,16 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { StyledVideoContainer, StyledVideoPlayer } from "./style";
+import {
+  StyledVideoContainer,
+  StyledVideoPannel,
+  StyledVideoPlayer,
+} from "./style";
 
 import VideoControl from "../VideoControls";
 import { createGlobalStyle } from "styled-components";
 
 import { BrowserRouter as Router } from "react-router-dom";
+import VideoProgressBar from "../VideoProgressBar";
 
 const GlobalStyle = createGlobalStyle`
   *{
@@ -16,7 +21,19 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 const VideoPlayer = ({ source, preview }) => {
-  const videoRef = useRef();
+  const videoRef = useRef(null);
+
+  const [controlState, setControlState] = useState({
+    isPlaying: false,
+    progress: 0,
+    speed: 1,
+    sound: 1,
+  });
+
+  useEffect(() => {
+    console.log(videoRef);
+  }, [source]);
+
   return (
     <Router>
       <StyledVideoContainer>
@@ -26,11 +43,19 @@ const VideoPlayer = ({ source, preview }) => {
           src={source}
           preload="metadata"
           poster={preview}
-        >
-          <source src={source}></source>
-        </StyledVideoPlayer>
-
-        <VideoControl videoRef={videoRef} />
+        />
+        <StyledVideoPannel>
+          <VideoProgressBar
+            videoRef={videoRef}
+            controlState={controlState}
+            setControlState={setControlState}
+          />
+          <VideoControl
+            videoRef={videoRef}
+            controlState={controlState}
+            setControlState={setControlState}
+          />
+        </StyledVideoPannel>
       </StyledVideoContainer>
     </Router>
   );
