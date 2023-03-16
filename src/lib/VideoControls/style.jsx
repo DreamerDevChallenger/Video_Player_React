@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { Box } from "@mui/material";
 
 const StyledVideoController = styled.div`
@@ -9,9 +9,6 @@ const StyledVideoController = styled.div`
   margin-left: auto;
   margin-right: auto;
   padding: 0 8px;
-
-  opacity: 1;
-  transition: opacity 100ms cubic-bezier(0.4, 0, 1, 1);
   svg {
     height: 40px;
     color: white;
@@ -20,7 +17,25 @@ const StyledVideoController = styled.div`
 
 const StyledVideoControlBox = styled(Box)`
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 6px;
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 `;
 
-export { StyledVideoController, StyledVideoControlBox };
+const StyledVideoControlSound = styled.input`
+  width: 50px;
+`;
+
+const StyledSound = styled.div``;
+
+export {
+  StyledVideoController,
+  StyledVideoControlBox,
+  StyledSound,
+  StyledVideoControlSound,
+};

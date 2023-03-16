@@ -6,6 +6,7 @@ import {
   VolumeOff,
   VolumeDown,
   VolumeUp,
+  RestartAlt,
 } from "@mui/icons-material";
 
 const ICON_DATA = {
@@ -16,6 +17,10 @@ const ICON_DATA = {
   next: {
     icon: <SkipNext />,
     tooltip: "Next (SHIFT + N)",
+  },
+  restart: {
+    icon: <RestartAlt />,
+    tooltip: "Restart (k)",
   },
   play: {
     icon: <PlayArrow />,

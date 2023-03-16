@@ -1,10 +1,15 @@
 import { StyledProgressBar, StyledCurrentTime } from "./style";
 
-const VideoProgressBar = ({ videoRef, controlState, setControlSate }) => {
-  const handleProgress = () => {};
+const VideoProgressBar = ({ controlState, progressHooks }) => {
   return (
     <StyledProgressBar>
-      <StyledCurrentTime width={controlState.progress} />
+      <StyledCurrentTime
+        value={Math.round(controlState.progress)}
+        type="range"
+        min={0}
+        max={10000}
+        onChange={progressHooks}
+      />
     </StyledProgressBar>
   );
 };

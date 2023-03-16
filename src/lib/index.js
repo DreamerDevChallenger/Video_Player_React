@@ -1,3 +1,3 @@
-import VideoPlayerComponent from "./VideoPlayerComponent";
+import { VideoPlayer } from "./VideoPlayerComponent";
 
-export { VideoPlayerComponent };
+export { VideoPlayer };
