@@ -7,20 +7,21 @@ import {
 } from "./style";
 import { ICON_DATA } from "../IconButtons";
 
-import useControlsHooks from "./hooks";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { ControlsContext } from "../utils/context/controls";
 
-const VideoControl = ({ videoRef, controlState, setControlState }) => {
-  const { isPlaying, isMuted, sound, currentTime, duration } = controlState;
-
+const VideoControl = () => {
   const [showSoundValue, setShowSoundValue] = useState(false);
+  const {
+    formatTimeVideo,
+    togglePlay,
+    toggleMute,
+    restartVideo,
+    controlState,
+    handleSound,
+  } = useContext(ControlsContext);
 
-  const { formatTimeVideo, togglePlay, toggleMute, restartVideo } =
-    useControlsHooks({
-      videoRef,
-      controlState,
-      setControlState,
-    });
+  const { isPlaying, isMuted, sound, currentTime, duration } = controlState;
 
   return (
     <StyledVideoController className="video-controls">
@@ -61,23 +62,31 @@ const VideoControl = ({ videoRef, controlState, setControlState }) => {
           onMouseLeave={() => setShowSoundValue(false)}
         >
           <div onClick={() => toggleMute()}>
-            {isMuted ? (
+            {isMuted || sound === 0 ? (
               <Tooltip title={ICON_DATA.volumeOff.tooltip} placement="top">
                 <IconButton>{ICON_DATA.volumeOff.icon}</IconButton>
               </Tooltip>
-            ) : (
+            ) : sound >= 0.5 ? (
               <Tooltip title={ICON_DATA.volumeUp.tooltip} placement="top">
                 <IconButton>{ICON_DATA.volumeUp.icon}</IconButton>
+              </Tooltip>
+            ) : (
+              <Tooltip title={ICON_DATA.volumeDown.tooltip} placement="top">
+                <IconButton>{ICON_DATA.volumeDown.icon}</IconButton>
               </Tooltip>
             )}
           </div>
           {showSoundValue && (
-            <StyledVideoControlSound
-              type={"range"}
-              max={100}
-              value={isMuted ? 0 : sound}
-              onChange={() => {}}
-            />
+            <Tooltip title={"Volume"} placement="top">
+              <StyledVideoControlSound
+                type={"range"}
+                min={0}
+                max={1}
+                step={0.05}
+                value={isMuted ? 0 : sound}
+                onChange={handleSound}
+              />
+            </Tooltip>
           )}
         </StyledSound>
         <div>

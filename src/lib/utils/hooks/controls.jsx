@@ -11,25 +11,27 @@ import PropTypes from "prop-types";
  */
 
 const useControlsHooks = ({ videoRef, controlState, setControlState }) => {
-  const { isPlaying, duration, currentTime } = controlState;
+  const { isPlaying, duration, currentTime, isMuted } = controlState;
+
+  const videoEl = videoRef.current;
 
   // Rewind & Forwards
 
   const rewindsVideo = useCallback(() => {
-    videoRef.current.currentTime = videoRef.current.currentTime - 5;
+    videoEl.currentTime = videoEl.currentTime - 5;
     setControlState({
       ...controlState,
-      currentTime: videoRef.current.currentTime,
+      currentTime: videoEl.currentTime,
     });
-  }, [controlState, setControlState, videoRef]);
+  }, [controlState, setControlState, videoEl]);
 
   const forwardsVideo = useCallback(() => {
-    videoRef.current.currentTime = videoRef.current.currentTime + 5;
+    videoEl.currentTime = videoEl.currentTime + 5;
     setControlState({
       ...controlState,
-      currentTime: videoRef.current.currentTime,
+      currentTime: videoEl.currentTime,
     });
-  }, [controlState, setControlState, videoRef]);
+  }, [controlState, setControlState, videoEl]);
 
   // Format Duration Video
 
@@ -43,9 +45,45 @@ const useControlsHooks = ({ videoRef, controlState, setControlState }) => {
     return `${minutes}:${seconds}`;
   };
 
+  // Down Sound Video
+  const downSound = useCallback(() => {
+    if (videoEl.volume > 0.05) {
+      videoEl.volume = videoEl.volume - 0.05;
+    } else {
+      videoEl.volume = 0;
+    }
+
+    setControlState({
+      ...controlState,
+      sound: videoEl.volume,
+    });
+  }, [controlState, setControlState, videoEl]);
+
+  // Up Sound Video
+  const upSound = useCallback(() => {
+    if (videoEl.volume < 0.95) {
+      videoEl.volume = videoEl.volume + 0.05;
+    } else {
+      videoEl.volume = 1;
+    }
+
+    setControlState({
+      ...controlState,
+      sound: videoEl.volume,
+      isMuted: false,
+    });
+  }, [controlState, setControlState, videoEl]);
+
   // Handle Sound Video
 
-  const handleSound = useCallback(() => {}, []);
+  const handleSound = useCallback(
+    (event) => {
+      const onChange = event.target.value;
+      videoEl.volume = onChange;
+      setControlState({ ...controlState, sound: videoEl.volume });
+    },
+    [controlState, setControlState, videoEl]
+  );
 
   // Mute Sound Video
 
@@ -56,12 +94,16 @@ const useControlsHooks = ({ videoRef, controlState, setControlState }) => {
     });
   }, [controlState, setControlState]);
 
+  useEffect(() => {
+    videoEl && (isMuted ? (videoEl.muted = true) : (videoEl.muted = false));
+  }, [isMuted, videoEl]);
+
   // Restart Video
 
   const restartVideo = useCallback(() => {
     setControlState({ ...controlState, isPlaying: false, currentTime: 0 });
-    videoRef.current.currentTime = 0;
-  }, [controlState, setControlState, videoRef]);
+    videoEl.currentTime = 0;
+  }, [controlState, setControlState, videoEl]);
 
   // Playing Video
 
@@ -70,8 +112,8 @@ const useControlsHooks = ({ videoRef, controlState, setControlState }) => {
   }, [controlState, setControlState, isPlaying]);
 
   useEffect(() => {
-    isPlaying ? videoRef.current.play() : videoRef.current.pause();
-  }, [isPlaying, videoRef]);
+    videoEl && (isPlaying ? videoEl.play() : videoEl.pause());
+  }, [isPlaying, videoEl]);
 
   // Key Event
 
@@ -82,8 +124,12 @@ const useControlsHooks = ({ videoRef, controlState, setControlState }) => {
       switch (keyCode) {
         case 37:
           return rewindsVideo();
+        case 38:
+          return upSound();
         case 39:
           return forwardsVideo();
+        case 40:
+          return downSound();
         case 75:
           if (duration === currentTime) {
             return restartVideo();
@@ -101,10 +147,13 @@ const useControlsHooks = ({ videoRef, controlState, setControlState }) => {
     [
       togglePlay,
       forwardsVideo,
-      handleSound,
       rewindsVideo,
       toggleMute,
       restartVideo,
+      downSound,
+      upSound,
+      duration,
+      currentTime,
     ]
   );
   useEffect(() => {
@@ -117,6 +166,7 @@ const useControlsHooks = ({ videoRef, controlState, setControlState }) => {
     togglePlay,
     toggleMute,
     restartVideo,
+    handleSound,
   };
 };
 

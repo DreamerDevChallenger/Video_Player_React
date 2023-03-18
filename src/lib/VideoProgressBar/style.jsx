@@ -1,50 +1,66 @@
 import styled from "styled-components";
 
 const StyledProgressBar = styled.div`
-  margin: 0;
-  height: 4px;
-  transition: height 0.05s;
-  width: 98%;
-  top: -15px;
-  left: 1%;
   position: absolute;
+  top: -7px;
+  left: 1%;
+  width: 98%;
+  height: 3px;
+
+  margin: 0;
+  border-radius: 0.1em;
+  transition: height 0.05s;
+  background: rgba(255, 255, 255, 0.1);
 `;
 
 const StyledCurrentTime = styled.input`
+  position: absolute;
+  margin: 0;
+  left: 0;
+  top: 0;
+  z-index: 3;
   width: 100%;
-  z-index: 1;
-
+  height: 100%;
+  background: none;
+  accent-color: red;
+  border-radius: 0.1em;
   -webkit-appearance: none;
   appearance: none;
-  background: transparent;
-  position: relative;
-  &:focus {
-    box-shadow: none;
-    outline: none;
-    pointer-events: none;
-  }
-  &::-webkit-slider-runnable-track {
-    background: red;
-    content: " ";
-    height: 3px;
-
-    appearance: none;
-    cursor: pointer;
-  }
   &::-webkit-slider-thumb {
-    cursor: pointer;
+    -webkit-appearance: none;
     background: red;
     width: 10px;
     height: 10px;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 5);
-    position: relative;
-    top: -50%;
-    transform: translate(0, -25%);
     border-radius: 100%;
-    &:hover {
-      filter: contrast(0.75);
-    }
-    appearance: none;
+    cursor: pointer;
   }
 `;
-export { StyledProgressBar, StyledCurrentTime };
+
+const StyledProgressValue = styled.div`
+  z-index: 2;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: ${({ width }) => `${width}%`};
+  background: red;
+  height: 100%;
+  border-radius: 0.1em;
+`;
+
+const StyledLoadedTime = styled.div`
+  z-index: 1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  border-radius: 0.1em;
+  width: ${({ width }) => `${width}%`};
+  background: rgba(255, 255, 255, 0.5);
+`;
+
+export {
+  StyledProgressBar,
+  StyledCurrentTime,
+  StyledLoadedTime,
+  StyledProgressValue,
+};

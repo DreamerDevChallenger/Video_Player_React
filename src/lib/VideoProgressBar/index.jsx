@@ -1,15 +1,28 @@
-import { StyledProgressBar, StyledCurrentTime } from "./style";
+import { useContext } from "react";
+import { ControlsContext } from "../utils/context/controls";
 
-const VideoProgressBar = ({ controlState, progressHooks }) => {
+import {
+  StyledProgressBar,
+  StyledCurrentTime,
+  StyledLoadedTime,
+  StyledProgressValue,
+} from "./style";
+
+const VideoProgressBar = () => {
+  const { controlState, progressChange } = useContext(ControlsContext);
+
   return (
     <StyledProgressBar>
       <StyledCurrentTime
-        value={Math.round(controlState.progress)}
+        width={controlState.progress}
         type="range"
         min={0}
         max={10000}
-        onChange={progressHooks}
+        value={controlState.progress}
+        onChange={progressChange}
       />
+      <StyledProgressValue width={controlState.progress / 100} />
+      <StyledLoadedTime width={controlState.loadedTime} />
     </StyledProgressBar>
   );
 };

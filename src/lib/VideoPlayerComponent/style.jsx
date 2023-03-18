@@ -20,8 +20,5 @@ const StyledVideoPannel = styled.div`
   opacity: 0;
   transition: opacity 0.2s ease-in-out;
 `;
-const StyledVideoPlayer = styled.video`
-  width: 100%;
-`;
 
-export { StyledVideoContainer, StyledVideoPannel, StyledVideoPlayer };
+export { StyledVideoContainer, StyledVideoPannel };
