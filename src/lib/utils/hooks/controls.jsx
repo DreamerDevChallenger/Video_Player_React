@@ -21,17 +21,27 @@ const useControlsHooks = ({ videoRef, controlState, setControlState }) => {
     videoEl.currentTime = videoEl.currentTime - 5;
     setControlState({
       ...controlState,
+      isPlaying: duration === currentTime ? false : isPlaying,
       currentTime: videoEl.currentTime,
     });
-  }, [controlState, setControlState, videoEl]);
+  }, [
+    controlState,
+    setControlState,
+    duration,
+    currentTime,
+    videoEl,
+    isPlaying,
+  ]);
 
   const forwardsVideo = useCallback(() => {
-    videoEl.currentTime = videoEl.currentTime + 5;
-    setControlState({
-      ...controlState,
-      currentTime: videoEl.currentTime,
-    });
-  }, [controlState, setControlState, videoEl]);
+    if (duration !== currentTime) {
+      videoEl.currentTime = videoEl.currentTime + 5;
+      setControlState({
+        ...controlState,
+        currentTime: videoEl.currentTime,
+      });
+    }
+  }, [controlState, setControlState, duration, currentTime, videoEl]);
 
   // Format Duration Video
 
@@ -79,8 +89,13 @@ const useControlsHooks = ({ videoRef, controlState, setControlState }) => {
   const handleSound = useCallback(
     (event) => {
       const onChange = event.target.value;
+
       videoEl.volume = onChange;
-      setControlState({ ...controlState, sound: videoEl.volume });
+      setControlState({
+        ...controlState,
+        sound: videoEl.volume,
+        isMuted: false,
+      });
     },
     [controlState, setControlState, videoEl]
   );
@@ -88,20 +103,27 @@ const useControlsHooks = ({ videoRef, controlState, setControlState }) => {
   // Mute Sound Video
 
   const toggleMute = useCallback(() => {
+    if (controlState.sound === 0) {
+      videoEl.volume = 0.05;
+    }
     setControlState({
       ...controlState,
-      isMuted: !controlState.isMuted,
+      sound: controlState.sound === 0 ? 0.05 : controlState.sound,
+      isMuted:
+        controlState.sound === 0
+          ? (controlState.isMuted = false)
+          : !controlState.isMuted,
     });
-  }, [controlState, setControlState]);
+  }, [controlState, setControlState, videoEl]);
 
   useEffect(() => {
     videoEl && (isMuted ? (videoEl.muted = true) : (videoEl.muted = false));
-  }, [isMuted, videoEl]);
+  }, [isMuted, videoEl, controlState, setControlState]);
 
   // Restart Video
 
   const restartVideo = useCallback(() => {
-    setControlState({ ...controlState, isPlaying: false, currentTime: 0 });
+    setControlState({ ...controlState, isPlaying: true, currentTime: 0 });
     videoEl.currentTime = 0;
   }, [controlState, setControlState, videoEl]);
 
@@ -109,12 +131,13 @@ const useControlsHooks = ({ videoRef, controlState, setControlState }) => {
 
   const togglePlay = useCallback(() => {
     setControlState({ ...controlState, isPlaying: !isPlaying });
-  }, [controlState, setControlState, isPlaying]);
+    !isPlaying ? videoEl.play() : videoEl.pause();
+  }, [controlState, setControlState, isPlaying, videoEl]);
 
-  useEffect(() => {
+  /*   useEffect(() => {
     videoEl && (isPlaying ? videoEl.play() : videoEl.pause());
-  }, [isPlaying, videoEl]);
-
+  }, [isPlaying, videoEl, controlState, setControlState]);
+ */
   // Key Event
 
   const handleKeyEvent = useCallback(

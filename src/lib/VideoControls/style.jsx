@@ -27,8 +27,33 @@ const StyledVideoControlBox = styled(Box)`
   }
 `;
 
-const StyledVideoControlSound = styled.input`
+const StyledVideoControlSoundContainer = styled.div`
+  position: relative;
   width: 50px;
+  background: rgba(255, 255, 255, 0.2);
+  height: 3px;
+  & > * {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 1em;
+  }
+`;
+
+const StyledVideoControlSoundValue = styled.div`
+  background-color: #ffffff;
+`;
+
+const StyledVideoControlSound = styled.input`
+  background: none;
+  &::-webkit-slider-thumb {
+    background-color: #ffffff;
+    width: 10px;
+    height: 10px;
+    transition: 0.3s ease-in;
+  }
 `;
 
 const StyledSound = styled.div``;
@@ -38,4 +63,6 @@ export {
   StyledVideoControlBox,
   StyledSound,
   StyledVideoControlSound,
+  StyledVideoControlSoundValue,
+  StyledVideoControlSoundContainer,
 };

@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const StyledVideoContainer = styled.div`
   display: flex;
-  width: 600px;
+  max-width: 600px;
   position: relative;
   &:hover {
     .video-pannel {

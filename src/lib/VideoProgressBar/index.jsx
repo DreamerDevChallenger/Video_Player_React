@@ -1,3 +1,5 @@
+/* import PropTypes from "prop-types";
+ */
 import { useContext } from "react";
 import { ControlsContext } from "../utils/context/controls";
 
@@ -13,16 +15,18 @@ const VideoProgressBar = () => {
 
   return (
     <StyledProgressBar>
+      <StyledProgressValue
+        className="progress-value"
+        style={{ width: (controlState.progress / 100).toFixed(2) + "%" }}
+      />
       <StyledCurrentTime
-        width={controlState.progress}
         type="range"
         min={0}
         max={10000}
-        value={controlState.progress}
+        value={Math.round(controlState.progress)}
         onChange={progressChange}
       />
-      <StyledProgressValue width={controlState.progress / 100} />
-      <StyledLoadedTime width={controlState.loadedTime} />
+      <StyledLoadedTime style={{ width: controlState.loadedTime + "%" }} />
     </StyledProgressBar>
   );
 };

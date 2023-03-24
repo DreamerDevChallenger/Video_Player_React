@@ -47,11 +47,12 @@ const ControlsProvider = ({ children, source, preview }) => {
       }}
     >
       <StyledVideoPlayer
-        onClick={() => {}}
+        onClick={togglePlay}
         ref={videoRef}
         onTimeUpdate={handleProgress}
         onLoadedMetadata={handleDuration}
         src={source}
+        autoplay={true}
         preload="metadata"
         poster={preview}
       />

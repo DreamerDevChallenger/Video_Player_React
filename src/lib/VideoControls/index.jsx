@@ -1,14 +1,19 @@
+/* import PropTypes from "prop-types";
+ */
+import { useContext, useState } from "react";
+import { ControlsContext } from "../utils/context/controls";
+
+import { ICON_DATA } from "../IconButtons";
 import { IconButton, Tooltip } from "@mui/material";
+
 import {
   StyledSound,
   StyledVideoControlBox,
   StyledVideoController,
   StyledVideoControlSound,
+  StyledVideoControlSoundContainer,
+  StyledVideoControlSoundValue,
 } from "./style";
-import { ICON_DATA } from "../IconButtons";
-
-import { useContext, useState } from "react";
-import { ControlsContext } from "../utils/context/controls";
 
 const VideoControl = () => {
   const [showSoundValue, setShowSoundValue] = useState(false);
@@ -78,14 +83,23 @@ const VideoControl = () => {
           </div>
           {showSoundValue && (
             <Tooltip title={"Volume"} placement="top">
-              <StyledVideoControlSound
-                type={"range"}
-                min={0}
-                max={1}
-                step={0.05}
-                value={isMuted ? 0 : sound}
-                onChange={handleSound}
-              />
+              <StyledVideoControlSoundContainer>
+                <StyledVideoControlSoundValue
+                  style={{
+                    width: isMuted
+                      ? 0
+                      : (controlState.sound * 100).toFixed(2) + "%",
+                  }}
+                />
+                <StyledVideoControlSound
+                  type={"range"}
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  value={isMuted ? 0 : sound}
+                  onChange={handleSound}
+                />
+              </StyledVideoControlSoundContainer>
             </Tooltip>
           )}
         </StyledSound>
